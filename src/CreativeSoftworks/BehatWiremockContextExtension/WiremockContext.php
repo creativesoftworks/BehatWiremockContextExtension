@@ -55,6 +55,9 @@ class WiremockContext
         $mappingsDirectory = $this->wiremockMappingsPath;
         $stubs = $table->getHash();
         foreach ($stubs as $stub) {
+            if (!array_key_exists('service', $stub) || !array_key_exists('mapping', $stub)) {
+                throw new \InvalidArgumentException('Table must contain the keys "service" and "mapping"');
+            }
             $mappingFilePath = $mappingsDirectory . '/' . $stub['service'] . '/' . $stub['mapping'];
             $mapping = file_get_contents($mappingFilePath);
 
