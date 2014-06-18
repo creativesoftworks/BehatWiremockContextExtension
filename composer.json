@@ -1,0 +1,30 @@
+{
+    "name": "creativesoftworks/behat-wiremock-context-extension",
+    "description": "A Behat Extension that makes use of Wiremock as a test double for API calls",
+    "type": "library",
+    "homepage": "https://github.com/creativesoftworks/BehatWiremockContextExtension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricardo Oliveira",
+            "email": "ricardo.oliveira@creative-softworks.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.3.0",
+        "behat/behat": "~2.4",
+        "guzzle/guzzle": "3.*"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.*"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "CreativeSoftworks\\BehatWiremockContextExtension": "src/"
+        }
+    }
+}
