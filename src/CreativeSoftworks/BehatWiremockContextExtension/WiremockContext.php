@@ -4,8 +4,9 @@ namespace CreativeSoftworks\BehatWiremockContextExtension;
 
 use Guzzle\Http\Client;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\BehatContext;
 
-class WiremockContext
+class WiremockContext extends BehatContext
 {
     const WIREMOCK_RESET_PATH = '/__admin/mappings/reset';
     const WIREMOCK_NEW_MAPPING_PATH = '/__admin/mappings/new';
