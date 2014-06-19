@@ -60,16 +60,34 @@ class WiremockContext extends BehatContext
                 throw new \InvalidArgumentException('Table must contain the keys "service" and "mapping"');
             }
             $mappingFilePath = $mappingsDirectory . '/' . $stub['service'] . '/' . $stub['mapping'];
-            $mapping = file_get_contents($mappingFilePath);
-
-            if (false === $mapping) {
-                throw new \InvalidArgumentException('Mapping ' . $mappingFilePath . ' could not be read.');
-            }
-            
-            $response = $this->client->post($this->wiremockBaseUrl . self::WIREMOCK_NEW_MAPPING_PATH, null, $mapping)->send();
-            if ($response->getStatusCode() !== 201) {
-                throw new \RuntimeException(sprintf('Failed to create stub. Called Url was %s%s and mapping used was %s', $this->wiremockBaseUrl, self::WIREMOCK_NEW_MAPPING_PATH, $mapping));
-            }
+            $mapping = $this->readMappingFile($mappingFilePath);
+            $this->postWiremockMapping($mapping);
         }
+    }
+    
+    /**
+     * @param string $mappingFilePath
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    private function readMappingFile($mappingFilePath)
+    {
+        $mapping = file_get_contents($mappingFilePath);
+        if (false === $mapping) {
+            throw new \InvalidArgumentException('Mapping ' . $mappingFilePath . ' could not be read.');
+        }
+        return $mapping;
+    }
+    
+    /**
+     * @param string $mapping
+     * @throws \RuntimeException
+     */
+    private function postWiremockMapping($mapping)
+    {
+        $response = $this->client->post($this->wiremockBaseUrl . self::WIREMOCK_NEW_MAPPING_PATH, null, $mapping)->send();
+        if ($response->getStatusCode() !== 201) {
+            throw new \RuntimeException(sprintf('Failed to create stub. Called Url was %s%s and mapping used was %s', $this->wiremockBaseUrl, self::WIREMOCK_NEW_MAPPING_PATH, $mapping));
+        }        
     }
 }
