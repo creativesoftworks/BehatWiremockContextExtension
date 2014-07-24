@@ -5,6 +5,8 @@ namespace CreativeSoftworks\BehatWiremockContextExtension;
 use Guzzle\Http\Client;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\BehatContext;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use CreativeSoftworks\BehatWiremockContextExtension\Event\MappingEvents;
 
 class WiremockContext extends BehatContext
 {
@@ -27,14 +29,20 @@ class WiremockContext extends BehatContext
     private $wiremockMappingsPath;
     
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    private $eventDispatcher;
+    
+    /**
      * @param \Guzzle\Http\Client $client
      * @param string $wiremockBaseUrl
      * @param string $wiremockMappingsPath
      */
-    public function __construct(Client $client, $wiremockBaseUrl, $wiremockMappingsPath) {
+    public function __construct(Client $client, $wiremockBaseUrl, $wiremockMappingsPath, EventDispatcherInterface $eventDispatcher) {
         $this->client = $client;
         $this->wiremockBaseUrl = $wiremockBaseUrl;
         $this->wiremockMappingsPath = $wiremockMappingsPath;
+        $this->eventDispatcher = $eventDispatcher;
     }
    
     /**
@@ -46,6 +54,7 @@ class WiremockContext extends BehatContext
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException('Resetting wiremock stubs failed. Called url was ' . $this->wiremockBaseUrl . self::WIREMOCK_RESET_PATH);
         }
+        $this->eventDispatcher->dispatch(MappingEvents::AFTER_RESET);
     }
     
     /**
