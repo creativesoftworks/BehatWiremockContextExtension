@@ -1,0 +1,23 @@
+parameters:
+    wiremock_context.client.class: Guzzle\Http\Client
+    wiremock_context.mappings_loader.class: CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService
+
+services:
+    wiremock_context.client:
+        class: %wiremock_context.client.class%
+    
+    wiremock_context.mappings_service:
+        class: %wiremock_context.mappings_loader.class%
+        arguments:
+            - @wiremock_context.client
+            - %wiremock_context.base_url%
+            
+    wiremock_context:
+        class: CreativeSoftworks\BehatWiremockContextExtension\WiremockContext
+        arguments:
+            - @wiremock_context.mappings_service
+            - %wiremock_context.mappings_path%
+            - %wiremock_context.default_mappings%
+            - @event_dispatcher
+        tags:
+            - { name: kernel.event_listener, event: wiremock_context.after_reset_mappings, method: loadDefaultMappings }

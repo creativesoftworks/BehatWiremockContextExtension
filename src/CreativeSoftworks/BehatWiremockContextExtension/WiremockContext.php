@@ -2,27 +2,19 @@
 
 namespace CreativeSoftworks\BehatWiremockContextExtension;
 
-use Guzzle\Http\Client;
+use CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\BehatContext;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use CreativeSoftworks\BehatWiremockContextExtension\Event\MappingEvents;
 
 class WiremockContext extends BehatContext
-{
-    const WIREMOCK_RESET_PATH = '/__admin/mappings/reset';
-    const WIREMOCK_NEW_MAPPING_PATH = '/__admin/mappings/new';
-    
+{    
     /**
-     * @var \Guzzle\Http\Client
+     * @var \CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService
      */
-    private $client;
+    private $mappingsService;
     
-    /**
-     * @var string
-     */
-    private $wiremockBaseUrl;
-
     /**
      * @var string
      */
@@ -32,17 +24,23 @@ class WiremockContext extends BehatContext
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var array
+     */
+    private $defaultMappingPaths;
     
     /**
-     * @param \Guzzle\Http\Client $client
-     * @param string $wiremockBaseUrl
+     * @param \CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService $mappingsService
      * @param string $wiremockMappingsPath
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @param array $defaultMappingPaths
      */
-    public function __construct(Client $client, $wiremockBaseUrl, $wiremockMappingsPath, EventDispatcherInterface $eventDispatcher) {
-        $this->client = $client;
-        $this->wiremockBaseUrl = $wiremockBaseUrl;
+    public function __construct(MappingsService $mappingsService, $wiremockMappingsPath, EventDispatcherInterface $eventDispatcher, array $defaultMappingPaths = array()) {
+        $this->mappingsService = $mappingsService;
         $this->wiremockMappingsPath = $wiremockMappingsPath;
         $this->eventDispatcher = $eventDispatcher;
+        $this->defaultMappingPaths = $defaultMappingPaths;
     }
    
     /**
@@ -50,10 +48,7 @@ class WiremockContext extends BehatContext
      */
     public function resetWiremockMappings()
     {
-        $response = $this->client->post($this->wiremockBaseUrl . self::WIREMOCK_RESET_PATH)->send();
-        if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException('Resetting wiremock stubs failed. Called url was ' . $this->wiremockBaseUrl . self::WIREMOCK_RESET_PATH);
-        }
+        $this->mappingsService->resetMappings();
         $this->eventDispatcher->dispatch(MappingEvents::AFTER_RESET);
     }
     
@@ -69,34 +64,17 @@ class WiremockContext extends BehatContext
                 throw new \InvalidArgumentException('Table must contain the keys "service" and "mapping"');
             }
             $mappingFilePath = $mappingsDirectory . '/' . $stub['service'] . '/' . $stub['mapping'];
-            $mapping = $this->readMappingFile($mappingFilePath);
-            $this->postWiremockMapping($mapping);
+            $this->mappingsService->loadMapping($mappingFilePath);
         }
     }
-    
+
     /**
-     * @param string $mappingFilePath
-     * @return string
-     * @throws \InvalidArgumentException
+     * @param array $defaultMappingPaths
      */
-    private function readMappingFile($mappingFilePath)
+    public function loadDefaultMappings(array $defaultMappingPaths)
     {
-        $mapping = file_get_contents($mappingFilePath);
-        if (false === $mapping) {
-            throw new \InvalidArgumentException('Mapping ' . $mappingFilePath . ' could not be read.');
+        foreach($defaultMappingPaths as $defaultMappingPath) {
+            $this->mappingsService->loadMapping($defaultMappingPath);
         }
-        return $mapping;
-    }
-    
-    /**
-     * @param string $mapping
-     * @throws \RuntimeException
-     */
-    private function postWiremockMapping($mapping)
-    {
-        $response = $this->client->post($this->wiremockBaseUrl . self::WIREMOCK_NEW_MAPPING_PATH, null, $mapping)->send();
-        if ($response->getStatusCode() !== 201) {
-            throw new \RuntimeException(sprintf('Failed to create stub. Called Url was %s%s and mapping used was %s', $this->wiremockBaseUrl, self::WIREMOCK_NEW_MAPPING_PATH, $mapping));
-        }        
     }
 }

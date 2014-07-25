@@ -2,7 +2,7 @@
 
 namespace CreativeSoftworks\BehatWiremockContextExtension\Event;
 
-class MappingEvents
+final class MappingEvents
 {
     const AFTER_RESET = 'wiremock_context.after_reset_mappings';
 }
