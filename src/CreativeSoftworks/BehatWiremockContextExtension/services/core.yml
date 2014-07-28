@@ -18,7 +18,7 @@ services:
             - @wiremock_context.mappings_service
             - %wiremock_context.mappings_path%
             - %wiremock_context.default_mappings%
-            - @event_dispatcher
+            - @behat.event_dispatcher
         tags:
             - { name: kernel.event_listener, event: wiremock_context.after_reset_mappings, method: loadDefaultMappings }
             
