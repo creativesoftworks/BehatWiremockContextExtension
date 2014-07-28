@@ -68,12 +68,9 @@ class WiremockContext extends BehatContext
         }
     }
 
-    /**
-     * @param array $defaultMappingPaths
-     */
-    public function loadDefaultMappings(array $defaultMappingPaths)
+    public function loadDefaultMappings()
     {
-        foreach($defaultMappingPaths as $defaultMappingPath) {
+        foreach($this->defaultMappingPaths as $defaultMappingPath) {
             $this->mappingsService->loadMapping($this->wiremockMappingsPath . '/' . $defaultMappingPath);
         }
     }
