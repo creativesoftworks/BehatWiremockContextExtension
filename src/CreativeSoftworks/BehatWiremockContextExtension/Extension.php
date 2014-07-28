@@ -6,6 +6,7 @@ use Behat\Behat\Extension\ExtensionInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 class Extension implements ExtensionInterface
 {
