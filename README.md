@@ -51,11 +51,12 @@ your_profile_name:
 
 The extension will reset the wiremock mappings before each scenario execution, so all mappings under wiremock_mappings_path will get loaded with no guaranteed order.
 Frequently you would want to guarantee that certain mappings will become defaults in wiremock (usually successful responses instead of failed ones).
-In order for that to happen you can define an array of mapping filepaths, relative to wiremock_mappings_path, like in this example:
+In order for that to happen you can define an array of mappings to be loaded, relative to wiremock_mappings_path, like in this example:
 
 ```yaml
             default_mappings:
-                - "service-name/mapping-file.json"
+                - { service: service-name, mapping: mapping-file.json }
+                - { service: service-name/and-subdirectory, mapping: another-mapping-file.json }
 ```
 
 ## Usage Example:
