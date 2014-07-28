@@ -5,9 +5,9 @@ BehatWiremockContextExtension
 A Behat Extension that makes use of Wiremock as a test double for API calls.
 
 ## Versions and compatibility
-Versions 1.x are compatible with behat 2.4+
-No compatibility for behat 3 (yet...)
-No compatibility for Windows
+* Versions 1.x are compatible with behat 2.4+
+* No compatibility for behat 3 (yet...)
+* No compatibility for Windows
 
 ## Installation
 Via composer:
