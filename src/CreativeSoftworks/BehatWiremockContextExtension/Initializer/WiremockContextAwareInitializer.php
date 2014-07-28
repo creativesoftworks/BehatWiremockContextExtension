@@ -23,9 +23,9 @@ class WiremockContextAwareInitializer implements InitializerInterface
     }
     
     /**
-     * @param \CreativeSoftworks\BehatWiremockContextExtension\WiremockContextAware $context
+     * @param \Behat\Behat\Context\ContextInterface $context
      */
-    public function initialize(WiremockContextAware $context)
+    public function initialize(ContextInterface $context)
     {
         $context->setWiremockContext($this->wiremockContext);
     }
