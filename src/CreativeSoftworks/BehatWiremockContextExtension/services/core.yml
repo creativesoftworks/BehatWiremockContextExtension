@@ -21,3 +21,10 @@ services:
             - @event_dispatcher
         tags:
             - { name: kernel.event_listener, event: wiremock_context.after_reset_mappings, method: loadDefaultMappings }
+            
+    wiremock_context.initializer:
+        class: CreativeSoftworks\BehatWiremockContextExtension\Initializer\WiremockContextAwareInitializer
+        arguments:
+            - @wiremock_context
+        tags:
+            - { name: behat.context.initializer }
