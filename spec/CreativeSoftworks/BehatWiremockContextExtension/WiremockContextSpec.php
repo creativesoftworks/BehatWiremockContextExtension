@@ -53,8 +53,8 @@ class WiremockContextSpec extends ObjectBehavior
     
     function it_loads_default_mappings_into_wiremock(MappingsService $mappingsService)
     {
-        $mappingsService->loadMapping('service/mapping')->shouldBeCalled();
-        $mappingsService->loadMapping('anotherService/anotherMapping')->shouldBeCalled();
+        $mappingsService->loadMapping('mappings_path/service/mapping')->shouldBeCalled();
+        $mappingsService->loadMapping('mappings_path/anotherService/anotherMapping')->shouldBeCalled();
         
         $this->loadDefaultMappings($this->defaultMappings);
     }
