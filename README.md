@@ -37,9 +37,11 @@ In order for that to happen you can define an array of mapping filepaths, relati
 ```
 
 ## Usage
-Your FeatureContext class must implement the CreativeSoftworks\BehatWiremockContextExtension\WiremockContextAware interface, here's an example:
+Your FeatureContext class must implement the [CreativeSoftworks\BehatWiremockContextExtension\WiremockContextAware](https://github.com/creativesoftworks/BehatWiremockContextExtension/blob/master/src/CreativeSoftworks/BehatWiremockContextExtension/WiremockContextAware.php) interface, here's an example:
 
 ```php
+class FeatureContext implements WiremockContextAware
+{
     /**
      * @return \CreativeSoftworks\BehatWiremockContextExtension\WiremockContext
      */
@@ -55,4 +57,5 @@ Your FeatureContext class must implement the CreativeSoftworks\BehatWiremockCont
     {
         $this->useContext('WiremockContext', $wiremockContext);
     }
+}
 ```
