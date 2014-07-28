@@ -13,7 +13,10 @@ use CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService;
 
 class WiremockContextSpec extends ObjectBehavior
 {   
-    private $defaultMappings = array('service/mapping', 'anotherService/anotherMapping');
+    private $defaultMappings = array(
+        array('service' => 'serviceName', 'mapping' => 'mappingName'),
+        array('service' => 'anotherServiceName', 'mapping' => 'anotherMappingName'),
+        );
     
     function let(MappingsService $mappingsService, TableNode $table, EventDispatcherInterface $eventDispatcher)
     { 
@@ -53,8 +56,8 @@ class WiremockContextSpec extends ObjectBehavior
     
     function it_loads_default_mappings_into_wiremock(MappingsService $mappingsService)
     {
-        $mappingsService->loadMapping('mappings_path/service/mapping')->shouldBeCalled();
-        $mappingsService->loadMapping('mappings_path/anotherService/anotherMapping')->shouldBeCalled();
+        $mappingsService->loadMapping('mappings_path/serviceName/mappingName')->shouldBeCalled();
+        $mappingsService->loadMapping('mappings_path/anotherServiceName/anotherMappingName')->shouldBeCalled();
         
         $this->loadDefaultMappings($this->defaultMappings);
     }
