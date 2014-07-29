@@ -7,8 +7,9 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\BehatContext;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use CreativeSoftworks\BehatWiremockContextExtension\Event\MappingEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class WiremockContext extends BehatContext
+class WiremockContext extends BehatContext implements EventSubscriberInterface
 {    
     /**
      * @var \CreativeSoftworks\BehatWiremockContextExtension\Mappings\MappingsService
@@ -73,5 +74,13 @@ class WiremockContext extends BehatContext
         foreach($this->defaultMappingPaths as $defaultMappingPath) {
             $this->mappingsService->loadMapping($this->wiremockMappingsPath . '/' . $defaultMappingPath['service'] . '/' . $defaultMappingPath['mapping']);
         }
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(MappingEvents::AFTER_RESET => array('loadDefaultMappings', 0));
     }
 }

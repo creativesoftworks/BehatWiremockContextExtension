@@ -20,7 +20,7 @@ services:
             - @behat.event_dispatcher
             - %wiremock_context.default_mappings%
         tags:
-            - { name: behat.event_subscriber, event: wiremock_context.after_reset_mappings, method: loadDefaultMappings }
+            - { name: behat.event_subscriber }
             
     wiremock_context.initializer:
         class: CreativeSoftworks\BehatWiremockContextExtension\Initializer\WiremockContextAwareInitializer
