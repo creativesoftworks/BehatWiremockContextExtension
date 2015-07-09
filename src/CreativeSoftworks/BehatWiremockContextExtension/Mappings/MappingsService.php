@@ -6,7 +6,7 @@ use Guzzle\Http\Client;
 
 class MappingsService
 {
-    const WIREMOCK_RESET_PATH = '/__admin/mappings/reset';
+    const WIREMOCK_RESET_PATH = '/__admin/reset';
     const WIREMOCK_NEW_MAPPING_PATH = '/__admin/mappings/new';
     
     /**

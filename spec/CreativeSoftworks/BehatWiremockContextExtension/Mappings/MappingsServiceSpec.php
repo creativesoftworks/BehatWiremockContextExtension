@@ -30,7 +30,7 @@ class MappingsServiceSpec extends ObjectBehavior
     
     function it_resets_wiremock_mappings(Client $client, Response $response)
     {
-        $client->post('base_url/__admin/mappings/reset')->shouldBeCalled()->willReturn($client);
+        $client->post('base_url/__admin/reset')->shouldBeCalled()->willReturn($client);
         $client->send()->shouldBeCalled()->willReturn($response);
         
         $this->resetMappings();
